@@ -1,0 +1,79 @@
+/* Remove default styling and use Tailwind */
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Smooth scroll behavior for all links */
+a[href^="#"] {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Glass morphism improvements */
+.glass-light {
+  background: rgba(255, 250, 240, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+/* Light theme specific improvements */
+:root:not(.dark) {
+  --card-shadow: 0 10px 30px rgba(30, 20, 15, 0.1);
+}
+
+.dark {
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition-property: background-color, border-color, color;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Disable transitions for animations */
+.motion * {
+  transition: none;
+}
+
+/* Link improvements */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Ensure images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Better button focus states */
+button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
