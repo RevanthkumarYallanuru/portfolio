@@ -128,7 +128,7 @@ export const portfolioData = {
   },
   {
     id: 4,
-    title: "Hotel Management Soft",
+    title: "Hotel Management Software",
     description:
       "Developed a hotel management system with billing and staff modules. Designed a personal dashboard tailored for client usage and deployed the application for real-world operations.",
     tech: ["React", "JavaScript", "Dashboard", "Client Deployment"],

@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [activeSection, setActiveSection] = useState("home");
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,7 +63,7 @@ const Navbar = () => {
           <motion.a
             href="#home"
             className="text-2xl font-bold text-gradient"
-            whileHover={{ scale: 1.05 }}
+            whileHover={isMobile ? {} : { scale: 1.05 }}
           >
             YRK
           </motion.a>
@@ -78,13 +80,13 @@ const Navbar = () => {
                   className={`relative group transition-colors duration-300 ${
                     isActive
                       ? "text-primary font-semibold"
-                      : "text-foreground hover:text-primary"
+                      : `text-foreground ${!isMobile ? 'hover:text-primary' : ''}`
                   }`}
                 >
                   {item.name}
                   <span
                     className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
-                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                      isActive ? "w-full" : `w-0 ${!isMobile ? 'group-hover:w-full' : ''}`
                     }`}
                   />
                 </a>
@@ -141,7 +143,7 @@ const Navbar = () => {
                   className={`block py-2 px-3 rounded transition-colors duration-300 ${
                     isActive
                       ? "text-primary font-semibold bg-primary/10"
-                      : "text-foreground hover:text-primary hover:bg-primary/5"
+                      : `text-foreground ${!isMobile ? 'hover:text-primary hover:bg-primary/5' : ''}`
                   }`}
                   onClick={() => setIsOpen(false)}
                 >

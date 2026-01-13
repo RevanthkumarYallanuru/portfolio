@@ -120,7 +120,9 @@ export const ProjectScroll = ({ projects }: ProjectScrollProps) => {
             key={`project-${project.id}`}
             className="flex-shrink-0 w-80"
           >
-            <div className="glass rounded-2xl overflow-hidden h-full flex flex-col transition-shadow duration-300 hover:shadow-lg">
+            <div className={`glass rounded-2xl overflow-hidden h-full flex flex-col transition-shadow duration-300 ${
+              !isMobile ? 'hover:shadow-lg' : ''
+            }`}>
               {/* Project Image */}
               <div className="relative h-48 bg-muted overflow-hidden flex-shrink-0">
                 {project.image ? (
@@ -144,7 +146,9 @@ export const ProjectScroll = ({ projects }: ProjectScrollProps) => {
 
               {/* Project Info */}
               <div className="p-5 flex-1 flex flex-col">
-                <h3 className="text-lg font-bold mb-2 line-clamp-1 transition-colors hover:text-primary">
+                <h3 className={`text-lg font-bold mb-2 line-clamp-1 transition-colors ${
+                  !isMobile ? 'hover:text-primary' : ''
+                }`}>
                   {project.title}
                 </h3>
 

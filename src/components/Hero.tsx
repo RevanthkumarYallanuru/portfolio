@@ -4,9 +4,11 @@ import { ArrowDown, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
 import FluidGlass from "./FluidGlass";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const Hero = () => {
   const { personal } = portfolioData;
+  const isMobile = useIsMobile();
 
   return (
     <section
@@ -70,14 +72,18 @@ const Hero = () => {
               <Button
                 asChild
                 size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 glow transition-all"
+                className={`bg-primary text-primary-foreground glow transition-all ${
+                  !isMobile ? 'hover:bg-primary/90' : ''
+                }`}
               >
                 <a href="#contact">Get in Touch</a>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="glass border-primary/30 hover:border-primary transition-all"
+                className={`glass border-primary/30 transition-all ${
+                  !isMobile ? 'hover:border-primary' : ''
+                }`}
                 onClick={() => {
                   const link = document.createElement('a');
                   link.href = personal.resumeUrl;
@@ -102,7 +108,9 @@ const Hero = () => {
           >
             <a
               href="#about"
-              className="inline-flex items-center text-primary hover:text-primary/80 transition-colors animate-float"
+              className={`inline-flex items-center text-primary animate-float transition-colors ${
+                !isMobile ? 'hover:text-primary/80' : ''
+              }`}
             >
               <ArrowDown className="h-6 w-6" />
             </a>

@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data";
 import { Github, Linkedin, Instagram, Mail } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const Footer = () => {
   const { personal, social } = portfolioData;
+  const isMobile = useIsMobile();
 
   const socialIcons: Record<string, any> = {
     Github,
@@ -27,8 +29,10 @@ const Footer = () => {
                   href={link.url}
                   target={isEmail ? undefined : "_blank"}
                   rel={isEmail ? undefined : "noopener noreferrer"}
-                  className="w-10 h-10 rounded-full glass flex items-center justify-center hover:glow transition-all"
-                  whileHover={{ scale: 1.1, y: -2 }}
+                  className={`w-10 h-10 rounded-full glass flex items-center justify-center transition-all ${
+                    !isMobile ? 'hover:glow' : ''
+                  }`}
+                  whileHover={isMobile ? {} : { scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={(e) => {
                     if (isEmail && typeof link.url === "string") {

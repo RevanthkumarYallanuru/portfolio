@@ -4,11 +4,13 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Briefcase, MapPin, Calendar, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const Experience = () => {
   const { experience } = portfolioData;
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isMobile = useIsMobile();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -49,10 +51,12 @@ const Experience = () => {
               <motion.div
                 key={exp.id}
                 variants={itemVariants}
-                whileHover={{ y: -8 }}
+                whileHover={isMobile ? {} : { y: -8 }}
                 className="group"
               >
-                <div className="glass rounded-2xl p-6 md:p-8 border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:glow">
+                <div className={`glass rounded-2xl p-6 md:p-8 border border-border/50 transition-all duration-300 ${
+                  !isMobile ? 'hover:border-primary/50 hover:shadow-xl hover:glow' : ''
+                }`}>
                   {/* Top Section: Title, Type Badge, and Location */}
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                     <div className="flex-1">
@@ -68,7 +72,9 @@ const Experience = () => {
                         {exp.company}
                       </p>
                     </div>
-                    <Badge className="w-fit px-4 py-2 text-sm font-semibold bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 transition-colors">
+                    <Badge className={`w-fit px-4 py-2 text-sm font-semibold bg-primary/10 text-primary border-primary/30 transition-colors ${
+                      !isMobile ? 'hover:bg-primary/20' : ''
+                    }`}>
                       {exp.type}
                     </Badge>
                   </div>

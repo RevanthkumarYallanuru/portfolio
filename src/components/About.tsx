@@ -3,11 +3,13 @@ import { portfolioData } from "@/data";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Code2, Zap, Target } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const About = () => {
   const { personal } = portfolioData;
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isMobile = useIsMobile();
 
   return (
     <section id="about" className="py-20 relative overflow-hidden">
@@ -64,22 +66,28 @@ const About = () => {
 
               <div className="grid grid-cols-3 gap-4">
                 <motion.div
-                  className="glass rounded-xl p-4 text-center group hover:glow transition-all"
-                  whileHover={{ scale: 1.05 }}
+                  className={`glass rounded-xl p-4 text-center group transition-all ${
+                    !isMobile ? 'hover:glow' : ''
+                  }`}
+                  whileHover={isMobile ? {} : { scale: 1.05 }}
                 >
                   <Code2 className="w-8 h-8 mx-auto mb-2 text-primary" />
                   <div className="text-sm text-muted-foreground">Clean Code</div>
                 </motion.div>
                 <motion.div
-                  className="glass rounded-xl p-4 text-center group hover:glow-secondary transition-all"
-                  whileHover={{ scale: 1.05 }}
+                  className={`glass rounded-xl p-4 text-center group transition-all ${
+                    !isMobile ? 'hover:glow-secondary' : ''
+                  }`}
+                  whileHover={isMobile ? {} : { scale: 1.05 }}
                 >
                   <Zap className="w-8 h-8 mx-auto mb-2 text-secondary" />
                   <div className="text-sm text-muted-foreground">Fast Performance</div>
                 </motion.div>
                 <motion.div
-                  className="glass rounded-xl p-4 text-center group hover:glow transition-all"
-                  whileHover={{ scale: 1.05 }}
+                  className={`glass rounded-xl p-4 text-center group transition-all ${
+                    !isMobile ? 'hover:glow' : ''
+                  }`}
+                  whileHover={isMobile ? {} : { scale: 1.05 }}
                 >
                   <Target className="w-8 h-8 mx-auto mb-2 text-accent" />
                   <div className="text-sm text-muted-foreground">User Focused</div>
@@ -96,24 +104,30 @@ const About = () => {
             className="grid grid-cols-2 md:grid-cols-3 gap-6"
           >
             <motion.div
-              className="glass rounded-xl p-6 text-center hover:glow transition-all"
-              whileHover={{ scale: 1.05 }}
+              className={`glass rounded-xl p-6 text-center transition-all ${
+                !isMobile ? 'hover:glow' : ''
+              }`}
+              whileHover={isMobile ? {} : { scale: 1.05 }}
             >
               <div className="text-4xl font-bold text-primary mb-2">2+</div>
               <div className="text-sm text-muted-foreground">Years Experience</div>
             </motion.div>
             
             <motion.div
-              className="glass rounded-xl p-6 text-center hover:glow-secondary transition-all"
-              whileHover={{ scale: 1.05 }}
+              className={`glass rounded-xl p-6 text-center transition-all ${
+                !isMobile ? 'hover:glow-secondary' : ''
+              }`}
+              whileHover={isMobile ? {} : { scale: 1.05 }}
             >
               <div className="text-4xl font-bold text-secondary mb-2">12+</div>
               <div className="text-sm text-muted-foreground">Projects Completed</div>
             </motion.div>
             
             <motion.div
-              className="glass rounded-xl p-6 text-center col-span-2 md:col-span-1 hover:glow transition-all"
-              whileHover={{ scale: 1.05 }}
+              className={`glass rounded-xl p-6 text-center col-span-2 md:col-span-1 transition-all ${
+                !isMobile ? 'hover:glow' : ''
+              }`}
+              whileHover={isMobile ? {} : { scale: 1.05 }}
             >
               <div className="text-4xl font-bold text-accent mb-2">10+</div>
               <div className="text-sm text-muted-foreground">Happy Clients</div>

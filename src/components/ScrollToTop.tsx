@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -38,7 +40,9 @@ const ScrollToTop = () => {
           <Button
             onClick={scrollToTop}
             size="icon"
-            className="w-12 h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 glow shadow-lg"
+            className={`w-12 h-12 rounded-full bg-primary text-primary-foreground glow shadow-lg ${
+              !isMobile ? 'hover:bg-primary/90' : ''
+            }`}
           >
             <ArrowUp className="h-5 w-5" />
           </Button>
