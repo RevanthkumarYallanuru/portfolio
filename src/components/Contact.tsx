@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const Contact = () => {
   const { personal } = portfolioData;
@@ -14,6 +15,7 @@ const Contact = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -91,7 +93,7 @@ const Contact = () => {
             Have a project in mind? Let's create something amazing together.
           </p>
 
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {/* Contact Info */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -99,27 +101,27 @@ const Contact = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="space-y-6"
             >
-              <div className="glass rounded-2xl p-8 hover:glow transition-all duration-300 border border-border/50 hover:border-primary/50">
-                <h3 className="text-2xl font-bold mb-6">Let's Connect</h3>
-                <p className="text-muted-foreground mb-8 leading-relaxed">
+              <div className="glass rounded-2xl p-4 md:p-8 hover:glow transition-all duration-300 border border-border/50 hover:border-primary/50">
+                <h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Let's Connect</h3>
+                <p className="text-xs md:text-base text-muted-foreground mb-6 md:mb-8 leading-relaxed">
                   I'm always open to discussing new projects, creative ideas, or
-                  opportunities to be part of your vision. Reach out and let's make
-                  it happen!
+                  opportunities to be part of your vision.
                 </p>
 
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   <motion.div
-                    className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10 hover:from-primary/20 hover:to-secondary/20 transition-all"
-                    whileHover={{ x: 5 }}
+                    className="flex items-start md:items-center gap-2 md:gap-3 p-3 md:p-4 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10 hover:from-primary/20 hover:to-secondary/20 transition-all"
+                    whileHover={isMobile ? {} : { x: 5 }}
                   >
-                    <div className="w-10 h-10 rounded-full glass flex items-center justify-center flex-shrink-0">
-                      <Mail className="h-5 w-5 text-primary" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full glass flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Mail className="h-3 w-3 md:h-5 md:w-5 text-primary" />
                     </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground">Email</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-xs text-muted-foreground">Email</div>
                       <a
                         href={`mailto:${personal.email}`}
-                        className="text-foreground font-semibold hover:text-primary transition-colors"
+                        className="text-xs md:text-sm font-semibold text-primary hover:text-primary/80 transition-colors break-all"
+                        title={personal.email}
                       >
                         {personal.email}
                       </a>
@@ -127,19 +129,20 @@ const Contact = () => {
                   </motion.div>
 
                   <motion.div
-                    className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-green-500/10 to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/20 transition-all"
-                    whileHover={{ x: 5 }}
+                    className="flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-lg bg-gradient-to-r from-green-500/10 to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/20 transition-all"
+                    whileHover={isMobile ? {} : { x: 5 }}
                   >
-                    <div className="w-10 h-10 rounded-full glass flex items-center justify-center flex-shrink-0">
-                      <MessageCircle className="h-5 w-5 text-green-500" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full glass flex items-center justify-center flex-shrink-0">
+                      <MessageCircle className="h-3 w-3 md:h-5 md:w-5 text-green-500" />
                     </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground">WhatsApp</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-xs text-muted-foreground">WhatsApp</div>
                       <a
                         href={`https://wa.me/${personal.phone.replace(/\s+/g, '')}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-foreground font-semibold hover:text-green-500 transition-colors"
+                        className="text-xs md:text-sm font-semibold text-green-500 hover:text-green-400 transition-colors"
+                        title={personal.phone}
                       >
                         {personal.phone}
                       </a>
@@ -147,15 +150,15 @@ const Contact = () => {
                   </motion.div>
 
                   <motion.div
-                    className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-secondary/10 to-primary/10 hover:from-secondary/20 hover:to-primary/20 transition-all"
-                    whileHover={{ x: 5 }}
+                    className="flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-lg bg-gradient-to-r from-secondary/10 to-primary/10 hover:from-secondary/20 hover:to-primary/20 transition-all"
+                    whileHover={isMobile ? {} : { x: 5 }}
                   >
-                    <div className="w-10 h-10 rounded-full glass flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-5 w-5 text-secondary" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full glass flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-3 w-3 md:h-5 md:w-5 text-secondary" />
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground">Location</div>
-                      <div className="text-foreground font-semibold">{personal.location}</div>
+                      <div className="text-xs text-muted-foreground">Location</div>
+                      <div className="text-xs md:text-sm font-semibold">{personal.location}</div>
                     </div>
                   </motion.div>
                 </div>

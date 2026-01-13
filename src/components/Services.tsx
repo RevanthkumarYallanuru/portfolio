@@ -3,23 +3,25 @@ import { portfolioData } from "@/data";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Check } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const Services = () => {
   const { services } = portfolioData;
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isMobile = useIsMobile();
 
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+      transition: { staggerChildren: isMobile ? 0.05 : 0.1, delayChildren: 0.1 },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+    show: { opacity: 1, y: 0, transition: { duration: isMobile ? 0.3 : 0.6 } },
   };
 
   // Sort services: highlighted first, then by ID
@@ -54,47 +56,59 @@ const Services = () => {
               <motion.div
                 key={service.id}
                 variants={itemVariants}
-                whileHover={{ y: -12 }}
+                whileHover={isMobile ? {} : { y: -12 }}
                 className={`group ${service.highlighted ? "lg:col-span-1 md:col-span-2" : ""}`}
               >
                 <div
-                  className={`relative h-full glass rounded-2xl p-8 border border-border/50 hover:border-primary/50 transition-all duration-300 overflow-hidden ${
+                  className={`relative h-full glass rounded-2xl p-6 md:p-8 border transition-all duration-300 overflow-hidden ${
+                    isMobile
+                      ? "border-border/30"
+                      : "border-border/50 hover:border-primary/50"
+                  } ${
                     service.highlighted
-                      ? "ring-2 ring-primary/50 hover:ring-primary md:row-span-2 flex flex-col"
+                      ? `ring-2 ring-primary/50 md:row-span-2 flex flex-col ${
+                          !isMobile ? "md:hover:ring-primary" : ""
+                        }`
                       : ""
                   }`}
                 >
                   {/* Gradient Background */}
-                  <div
-                    className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 bg-gradient-to-br ${service.color}`}
-                  />
+                  {!isMobile && (
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 bg-gradient-to-br"
+                      style={{ backgroundImage: `linear-gradient(to bottom right, var(--color-${service.id}))` }}
+                    />
+                  )}
 
                   {/* Content */}
                   <div className="relative z-10 flex flex-col h-full">
                     {/* Icon */}
                     <motion.div
-                      className={`text-5xl mb-4 w-fit p-4 rounded-xl bg-gradient-to-br ${service.color} bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300`}
-                      whileHover={{ scale: 1.15, rotate: 5 }}
+                      className={`text-4xl md:text-5xl mb-4 w-fit p-3 md:p-4 rounded-xl bg-opacity-10 transition-all duration-300`}
+                      style={{ backgroundImage: `linear-gradient(to bottom right, var(--color-${service.id}))` }}
+                      whileHover={isMobile ? {} : { scale: 1.15, rotate: 5 }}
                     >
                       {service.icon}
                     </motion.div>
 
                     {/* Title & Tagline */}
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2 group-hover:text-primary transition-colors">
+                    <h3 className={`font-bold mb-2 transition-colors ${
+                      isMobile ? "text-xl" : "text-2xl md:text-3xl group-hover:text-primary"
+                    }`}>
                       {service.title}
                     </h3>
-                    <p className={`text-sm font-semibold mb-4 bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
+                    <p className={`text-sm font-semibold mb-4 bg-clip-text text-transparent ${isMobile ? "hidden" : ""}`}>
                       {service.tagline}
                     </p>
 
                     {/* Description */}
-                    <p className="text-muted-foreground mb-6 leading-relaxed flex-grow">
+                    <p className={`text-muted-foreground mb-6 leading-relaxed flex-grow ${isMobile ? "text-xs line-clamp-2" : "text-sm"}`}>
                       {service.description}
                     </p>
 
                     {/* Features */}
                     <div className="space-y-3">
-                      {service.features.map((feature, idx) => (
+                      {service.features.slice(0, isMobile ? 2 : undefined).map((feature, idx) => (
                         <motion.div
                           key={idx}
                           initial={{ opacity: 0, x: -10 }}
@@ -102,16 +116,21 @@ const Services = () => {
                           transition={{ delay: 0.4 + idx * 0.08 }}
                           className="flex items-start gap-3"
                         >
-                          <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${service.color} p-0.5 flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                            <Check className="w-3 h-3 text-white" />
+                          <div className="w-4 h-4 md:w-5 md:h-5 rounded-full p-0.5 flex items-center justify-center flex-shrink-0 mt-0.5 bg-primary/30">
+                            <Check className="w-2.5 h-2.5 md:w-3 md:h-3 text-primary" />
                           </div>
-                          <span className="text-sm text-foreground">{feature}</span>
+                          <span className={`text-foreground ${isMobile ? "text-xs" : "text-sm"}`}>{feature}</span>
                         </motion.div>
                       ))}
+                      {isMobile && service.features.length > 2 && (
+                        <p className="text-xs text-muted-foreground">
+                          +{service.features.length - 2} more features
+                        </p>
+                      )}
                     </div>
 
                     {/* Highlight Badge */}
-                    {service.highlighted && (
+                    {service.highlighted && !isMobile && (
                       <motion.div
                         className="mt-8 pt-6 border-t border-border/30"
                         initial={{ opacity: 0 }}
@@ -128,12 +147,15 @@ const Services = () => {
                     )}
                   </div>
 
-                  {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none blur-xl">
-                    <div
-                      className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${service.color} opacity-20`}
-                    />
-                  </div>
+                  {/* Hover Glow Effect - Desktop Only */}
+                  {!isMobile && (
+                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none blur-xl">
+                      <div
+                        className="absolute inset-0 rounded-2xl opacity-20"
+                        style={{ backgroundImage: `linear-gradient(to bottom right, var(--color-${service.id}))` }}
+                      />
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -146,14 +168,14 @@ const Services = () => {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.6 }}
           >
-            <p className="text-muted-foreground mb-6">
+            <p className={`mb-6 ${isMobile ? "text-sm text-muted-foreground" : "text-muted-foreground"}`}>
               Ready to get started? Let's build something amazing together.
             </p>
             <motion.a
               href="#contact"
-              className="inline-block px-8 py-3 bg-gradient-to-r from-primary to-secondary rounded-lg font-semibold text-white hover:shadow-lg transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="inline-block px-6 md:px-8 py-2.5 md:py-3 bg-gradient-to-r from-primary to-secondary rounded-lg font-semibold text-white transition-all duration-300"
+              whileHover={isMobile ? {} : { scale: 1.05 }}
+              whileTap={isMobile ? { scale: 0.98 } : { scale: 0.95 }}
             >
               Start Your Project
             </motion.a>

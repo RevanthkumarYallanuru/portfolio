@@ -1,7 +1,8 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 
 interface Project {
   id: number;
@@ -21,61 +22,76 @@ interface ProjectScrollProps {
   pauseOnHover?: boolean;
 }
 
-export const ProjectScroll = ({ projects, speed = 40, pauseOnHover = true }: ProjectScrollProps) => {
+export const ProjectScroll = ({ projects }: ProjectScrollProps) => {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const velocityRef = useRef(0);
-  const rafRef = useRef<number | null>(null);
+  const [offset, setOffset] = useState(0);
+  const isMobile = useIsMobile();
+  const cardWidth = 320 + 24; // w-80 (320px) + gap-6 (24px)
+  const currentIndex = Math.round(offset / cardWidth);
 
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    let offset = 0;
-    let lastTimestamp = Date.now();
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const animate = () => {
-      const now = Date.now();
-      const deltaTime = (now - lastTimestamp) / 1000;
-      lastTimestamp = now;
-
-      if (!prefersReduced) {
-        const currentSpeed = isHovered && pauseOnHover ? 0 : speed;
-        offset += currentSpeed * deltaTime;
-
-        // Get the width of one complete set of projects
-        const trackWidth = track.scrollWidth / 2;
-        
-        // Loop the animation
-        if (offset > trackWidth) {
-          offset = 0;
-        }
-
-        track.style.transform = `translateX(-${offset}px)`;
+  const scroll = (direction: 'left' | 'right') => {
+    if (!trackRef.current) return;
+    
+    const scrollAmount = cardWidth;
+    const maxOffset = (projects.length - 1) * cardWidth;
+    let newOffset = offset;
+    
+    if (direction === 'right') {
+      // Right arrow: move to next (increase offset)
+      if (offset >= maxOffset) {
+        newOffset = 0; // Loop back to first
+      } else {
+        newOffset = offset + scrollAmount;
       }
+    } else {
+      // Left arrow: move to previous (decrease offset)
+      if (offset <= 0) {
+        newOffset = maxOffset; // Loop back to last
+      } else {
+        newOffset = offset - scrollAmount;
+      }
+    }
+    
+    setOffset(newOffset);
+    trackRef.current.style.transform = `translateX(-${newOffset}px)`;
+    trackRef.current.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+  };
 
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [isHovered, pauseOnHover, speed]);
+  const goToProject = (index: number) => {
+    if (!trackRef.current) return;
+    const newOffset = index * cardWidth;
+    setOffset(newOffset);
+    trackRef.current.style.transform = `translateX(-${newOffset}px)`;
+    trackRef.current.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+  };
 
   return (
-    <div
-      className="relative w-full overflow-hidden py-8"
-      onMouseEnter={() => pauseOnHover && setIsHovered(true)}
-      onMouseLeave={() => pauseOnHover && setIsHovered(false)}
-    >
+    <div className="relative w-full overflow-hidden py-8">
       {/* Fade gradient left */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 md:w-20 bg-gradient-to-r from-background to-transparent" />
       
       {/* Fade gradient right */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 md:w-20 bg-gradient-to-l from-background to-transparent" />
+
+      {/* Left Arrow - Mobile & Desktop */}
+      <motion.button
+        onClick={() => scroll('left')}
+        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full glass border border-primary/50 hover:border-primary transition-all"
+        whileHover={isMobile ? {} : { scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+      </motion.button>
+
+      {/* Right Arrow - Mobile & Desktop */}
+      <motion.button
+        onClick={() => scroll('right')}
+        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full glass border border-primary/50 hover:border-primary transition-all"
+        whileHover={isMobile ? {} : { scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+      </motion.button>
 
       {/* Scrolling track */}
       <div
@@ -83,18 +99,18 @@ export const ProjectScroll = ({ projects, speed = 40, pauseOnHover = true }: Pro
         className="flex gap-6 w-max"
         style={{
           willChange: 'transform',
+          transform: `translateX(-${offset}px)`,
         }}
       >
-        {/* Render projects twice for infinite scroll */}
-        {[...Array(2)].map((_, setIndex) =>
-          projects.map((project) => (
+        {/* Render projects single time - manual control */}
+        {projects.map((project) => (
             <motion.div
-              key={`${setIndex}-${project.id}`}
+              key={`project-${project.id}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="flex-shrink-0 w-80"
-              whileHover={{ y: -6 }}
+              whileHover={isMobile ? {} : { y: -6 }}
             >
               <div className="glass rounded-2xl overflow-hidden group h-full flex flex-col hover:glow transition-all duration-300">
                 {/* Project Image */}
@@ -103,7 +119,9 @@ export const ProjectScroll = ({ projects, speed = 40, pauseOnHover = true }: Pro
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      className={`w-full h-full object-cover transition-transform duration-300 ${
+                        isMobile ? '' : 'group-hover:scale-110'
+                      }`}
                     />
                   ) : (
                     <>
@@ -159,8 +177,25 @@ export const ProjectScroll = ({ projects, speed = 40, pauseOnHover = true }: Pro
                 </div>
               </div>
             </motion.div>
-          ))
-        )}
+          ))}
+      </div>
+
+      {/* Pagination Dots */}
+      <div className="flex justify-center items-center gap-2 mt-8">
+        {projects.map((_, index) => (
+          <motion.button
+            key={index}
+            onClick={() => goToProject(index)}
+            className={`transition-all duration-300 rounded-full ${
+              currentIndex === index
+                ? 'bg-primary w-3 h-3 md:w-3.5 md:h-3.5'
+                : 'bg-primary/30 hover:bg-primary/50 w-2 h-2 md:w-2.5 md:h-2.5'
+            }`}
+            whileHover={isMobile ? {} : { scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label={`Go to project ${index + 1}`}
+          />
+        ))}
       </div>
     </div>
   );
