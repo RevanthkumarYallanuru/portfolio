@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-is-mobile';
+import LazyImage from './LazyImage';
 
 interface Project {
   id: number;
@@ -126,13 +127,12 @@ export const ProjectScroll = ({ projects }: ProjectScrollProps) => {
               {/* Project Image */}
               <div className="relative h-48 bg-muted overflow-hidden flex-shrink-0">
                 {project.image ? (
-                  <img
+                  <LazyImage
                     src={project.image}
                     alt={project.title}
-                    className={`w-full h-full object-cover ${
-                      !isMobile ? 'hover:scale-110 transition-transform duration-300' : ''
-                    }`}
-                    loading="lazy"
+                    className="w-full h-full"
+                    imageClassName={!isMobile ? 'hover:scale-110 transition-transform duration-300' : ''}
+                    placeholderClassName="w-full h-full"
                   />
                 ) : (
                   <>

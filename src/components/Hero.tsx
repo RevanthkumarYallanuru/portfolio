@@ -15,15 +15,21 @@ const Hero = () => {
       id="home"
       className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
     >
-      {/* 3D Background - FluidGlass */}
-      <div className="absolute inset-0 z-0">
-        <Suspense fallback={<div className="w-full h-full bg-background" />}>
-          <FluidGlass />
-        </Suspense>
-      </div>
+      {/* 3D Background - FluidGlass (disabled on mobile for performance) */}
+      {!isMobile && (
+        <div className="absolute inset-0 z-0">
+          <Suspense fallback={<div className="w-full h-full bg-background" />}>
+            <FluidGlass />
+          </Suspense>
+        </div>
+      )}
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background z-10" />
+      {/* Gradient Overlay - fallback for mobile */}
+      {isMobile ? (
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-blue-950/20 to-background z-0" />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background z-10" />
+      )}
 
       {/* Content */}
       <div className="container mx-auto px-4 z-20 relative">

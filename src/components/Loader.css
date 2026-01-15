@@ -1,0 +1,234 @@
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2d1f0f 0%, #3d2817 40%, #4a3520 60%, #3d2817 100%);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.loader-bg-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.loader-content {
+  position: relative;
+  z-index: 100;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.loader-glow {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.35), transparent);
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: 50;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(0.6);
+    opacity: 0.15;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+/* YRK Text Wrapper - MASSIVE AND IN FRONT */
+.loader-text-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  z-index: 110;
+  position: relative;
+}
+
+.loader-text {
+  display: flex;
+  gap: 28px;
+  font-size: 8.5rem;
+  font-weight: 900;
+  letter-spacing: 16px;
+  line-height: 1;
+  color: #f5a623;
+  filter: drop-shadow(0 0 50px rgba(245, 158, 11, 0.9)) drop-shadow(0 0 30px rgba(232, 160, 0, 0.7)) drop-shadow(0 0 15px rgba(245, 166, 35, 0.5));
+  text-shadow: 
+    0 0 60px rgba(245, 158, 11, 0.8),
+    0 0 40px rgba(232, 160, 0, 0.6),
+    0 0 20px rgba(245, 166, 35, 0.4);
+  position: relative;
+  z-index: 110;
+}
+
+.loader-letter {
+  display: inline-block;
+  line-height: 1;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 900;
+  color: #f5a623;
+}
+
+.loader-dots {
+  display: flex;
+  gap: 16px;
+  z-index: 105;
+  position: relative;
+}
+
+.loader-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f5d158, #e8a000);
+  box-shadow: 0 0 25px rgba(245, 166, 35, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Animated circles - BACKGROUND */
+.loader-circle {
+  position: absolute;
+  border: 2px solid;
+  border-radius: 50%;
+  opacity: 0.12;
+  z-index: 1;
+}
+
+.loader-circle-1 {
+  width: 500px;
+  height: 500px;
+  border-color: #f5a623;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 30s linear infinite;
+}
+
+.loader-circle-2 {
+  width: 300px;
+  height: 300px;
+  border-color: #e8a000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin-reverse 25s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes spin-reverse {
+  0% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .loader-text {
+    font-size: 5.5rem;
+    letter-spacing: 10px;
+    gap: 18px;
+  }
+
+  .loader-text-wrapper {
+    min-height: 150px;
+  }
+
+  .loader-circle-1 {
+    width: 380px;
+    height: 380px;
+  }
+
+  .loader-circle-2 {
+    width: 220px;
+    height: 220px;
+  }
+
+  .loader-glow {
+    width: 150px;
+    height: 150px;
+  }
+
+  .loader-content {
+    gap: 30px;
+  }
+
+  .loader-dots {
+    gap: 12px;
+  }
+
+  .loader-dot {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loader-text {
+    font-size: 3.5rem;
+    letter-spacing: 7px;
+    gap: 12px;
+  }
+
+  .loader-text-wrapper {
+    min-height: 110px;
+  }
+
+  .loader-dots {
+    gap: 10px;
+  }
+
+  .loader-dot {
+    width: 11px;
+    height: 11px;
+  }
+
+  .loader-circle-1 {
+    width: 250px;
+    height: 250px;
+  }
+
+  .loader-circle-2 {
+    width: 140px;
+    height: 140px;
+  }
+
+  .loader-glow {
+    width: 100px;
+    height: 100px;
+  }
+
+  .loader-content {
+    gap: 20px;
+  }
+}

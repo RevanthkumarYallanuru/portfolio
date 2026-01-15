@@ -4,6 +4,7 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Code2, Zap, Target } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-is-mobile";
+import LazyImage from "./LazyImage";
 
 const About = () => {
   const { personal } = portfolioData;
@@ -35,11 +36,15 @@ const About = () => {
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-primary rounded-2xl blur-2xl opacity-30" />
-                <img
-                  src={personal.portraitImage}
-                  alt={personal.name}
-                  className="relative rounded-2xl w-full max-w-sm glass shadow-2xl"
-                />
+                <div className="relative w-full max-w-sm rounded-2xl overflow-hidden">
+                  <LazyImage
+                    src={personal.portraitImage}
+                    alt={personal.name}
+                    className="w-full"
+                    imageClassName="glass shadow-2xl rounded-2xl"
+                    placeholderClassName="w-full aspect-square rounded-2xl"
+                  />
+                </div>
               </div>
             </motion.div>
 
